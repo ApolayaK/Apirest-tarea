@@ -1,0 +1,36 @@
+# API REST Botica – Informe Detallado
+
+## 1. Visión General  
+La **API REST Botica** es una interfaz backend construida en Node.js y Express que expone operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre la tabla `Medicamentos` de la base de datos MySQL llamada `botica`. Su objetivo es ofrecer un servicio consistente y fácil de consumir por cualquier aplicación (sitio web, app móvil o microservicio) que necesite gestionar inventario de medicamentos.
+
+## 2. Motivación y Casos de Uso  
+- **Farmacias y boticas web**: Sincronizar catálogos de fármacos con un frontend dinámico.  
+- **Sistemas de gestión interna**: Integrar con paneles administrativos para supervisar existencias, precios y renovación de recetas.  
+- **Integración con terceros**: Permitir que proveedores externos consulten o añadan medicamentos vía HTTP/JSON, manteniendo un único repositorio de datos.
+
+## 3. Arquitectura por Capas  
+1. **Configuración**  
+   - `.env` y `src/config.js` cargan variables (host, usuario, contraseña, puerto).  
+2. **Conexión a BD**  
+   - `src/db.js` crea un _pool_ de conexiones MySQL con `mysql2/promise`.  
+3. **Controladores**  
+   - `src/controllers/medicamentos.controller.js` contiene la lógica de cada endpoint:  
+     - Listar todos  
+     - Obtener por ID  
+     - Crear nuevo  
+     - Actualizar existente  
+     - Eliminar  
+4. **Rutas**  
+   - `src/routes/medicamentos.routes.js` mapea cada verbo HTTP (`GET`, `POST`, `PUT`, `DELETE`) a su controlador.  
+5. **Servidor**  
+   - `src/app.js` configura Express (JSON middleware, manejo de rutas y errores).  
+   - `src/index.js` arranca el servidor en el puerto definido.
+
+## 4. Flujo de Trabajo Interno  
+1. Cliente envía una solicitud HTTP a `/api/medicamentos` (e.g., `GET`).  
+2. Express recibe la petición y la dirige al router de medicamentos.  
+3. El router invoca el método correspondiente del controlador.  
+4. El controlador usa el _pool_ de MySQL para ejecutar la consulta SQL.  
+5. MySQL devuelve resultados o confirma modificación; el controlador formatea la respuesta JSON.  
+6. Express envía al cliente código HTTP y cuerpo JSON.
+
